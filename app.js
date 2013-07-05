@@ -3,16 +3,13 @@ var resource = require('resource'),
     q = require('q'),
     client;
 
+require('./socket2/index.js');
 resource.use('http');
-resource.socket = require('./socket2/index.js');
 resource.use('creature');
-
-resource.onAny(function(a, b){
-});
 
 resource.http.listen(function(err, server){
     if(err) throw(err);
-    resource.socket.start({ engine: 'sock.js' }, function(err, socket){
+    resource.socket2.start(function(err, socket){
         if(err) throw(err);
 
         client = io.connect('http://localhost:8888');

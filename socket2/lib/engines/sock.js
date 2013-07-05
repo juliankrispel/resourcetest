@@ -4,7 +4,7 @@ engine.createServer = function (resources, options, callback) {
 
   var sockjs = require('sockjs').createServer()
   sockjs.installHandlers(options.server);
-  callback(null, io);
+  callback(null, sockjs);
 
   sockjs.on('connection', function (socket) {
     Object.keys(resources).forEach(function(name) {
@@ -17,30 +17,36 @@ engine.createServer = function (resources, options, callback) {
       //
       socket.on('data', function(message){
         //
-        // Since SockJs just sends plain strings. we need to pass JSON to conform with the socket resource interface
+        // Since SockJs just sends plain strings. we need to parse JSON to conform with the socket resource interface
         //
         try {
-          message = JSON.parse(str);
+          message = JSON.parse(message);
         } catch (er) {
           return callback(new Error(message + ' is not valid JSON'));
         }
 
         //
+        // Ignore Resources that aren't defined
+        //
+        if(resource.name !== message[0]) return ;
+console.log(resource);
+console.log(resource['create']);
+
+        //
         // Resource methods
         //
-        if(typeof resource[action] === 'function') {
+        if(typeof resource[message[1]] === 'function') {
           return engine.request(message[0], message[1], message[2], message[3]);
         }
 
-        return callback(new Error(action + ' is not a valid action.'));
-
+        return callback(new Error(message[1] + ' is not a valid action.'));
       });
     });
     socket.on('disconnect', function () { 
       // console.log('got a disconnect');
     });
   });
-  return io;
+  return sockjs;
 };
 
 engine.request = function(resource, action, payload, callback) {

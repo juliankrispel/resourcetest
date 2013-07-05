@@ -30,17 +30,18 @@ exports.engines = {
 };
 
 function start (options, callback) {
-console.log('options', options);
 
   if (!callback && typeof options == 'function') {
     callback = options;
     options = {};
   }
 
+  options.server = options.server || resource.http.server;
+
   var sockets = require('./lib/sockets');
   socket.server = sockets.createServer(
     resource.resources,
-    { server: resource.http.server },
+    options,
     function (err, io) {
       if (err) {
         return callback(err);
