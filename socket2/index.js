@@ -1,5 +1,5 @@
 var resource  = require('resource'),
-    socket = resource.define('socket2');
+    socket = resource.define('socket');
 
 socket.schema.description = "websockets resource";
 

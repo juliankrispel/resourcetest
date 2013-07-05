@@ -9,7 +9,7 @@ resource.use('creature');
 
 resource.http.listen(function(err, server){
     if(err) throw(err);
-    resource.socket2.start(function(err, socket){
+    resource.socket.start(function(err, socket){
         if(err) throw(err);
 
         client = io.connect('http://localhost:8888');

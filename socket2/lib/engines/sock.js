@@ -4,6 +4,7 @@ engine.createServer = function (resources, options, callback) {
 
   var sockjs = require('sockjs').createServer()
   sockjs.installHandlers(options.server);
+
   callback(null, sockjs);
 
   sockjs.on('connection', function (socket) {
@@ -29,14 +30,12 @@ engine.createServer = function (resources, options, callback) {
         // Ignore Resources that aren't defined
         //
         if(resource.name !== message[0]) return ;
-console.log(resource);
-console.log(resource['create']);
 
         //
         // Resource methods
         //
         if(typeof resource[message[1]] === 'function') {
-          return engine.request(message[0], message[1], message[2], message[3]);
+          return engine.request(resource, message[1], message[2], message[3]);
         }
 
         return callback(new Error(message[1] + ' is not a valid action.'));

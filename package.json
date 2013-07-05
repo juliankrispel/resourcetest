@@ -3,6 +3,7 @@
         "socket.io-client": "*",
         "resource": "*",
         "resources": "*",
-        "q": "*"
+        "q": "*",
+        "tap": "*"
     }
 }
