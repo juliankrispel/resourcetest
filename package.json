@@ -1,0 +1,8 @@
+{
+    "dependencies": {
+        "socket.io-client": "*",
+        "resource": "*",
+        "resources": "*",
+        "q": "*"
+    }
+}
