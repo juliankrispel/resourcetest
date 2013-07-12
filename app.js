@@ -3,22 +3,36 @@ var resource = require('resource'),
     q = require('q'),
     client;
 
-require('./socket2/index.js');
+
+require('./reactive.js');
+resource.use('socket');
+resource.use('hook');
 resource.use('http');
 resource.use('creature');
 
 resource.http.listen(function(err, server){
     if(err) throw(err);
+
     resource.socket.start(function(err, socket){
         if(err) throw(err);
 
-        client = io.connect('http://localhost:8888');
-        client.on('connect', function(){
-            console.log('client connected');
-            client.emit('creature', 'create', { id: 'korben', type: 'unicorn' }, function (err, result) {
+        resource.reactive.subscribe({
+            resources: ['creature'],
+            events: ['create']
+        }, function(err){
+
+            if (err) throw(err);
+
+            client = io.connect('http://localhost:8888');
+            client.on('connect', function(){
+
+                console.log('client connected');
+                setTimeout(function(){
+                client.emit('creature', 'create', { id: 'korben', type: 'unicorn' }, function (err, result) {
+                });
+                
+                }, 1000)
             });
         });
     });
 });
-
-
